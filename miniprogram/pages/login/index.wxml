@@ -1,0 +1,53 @@
+<view class="page">
+  <!-- 顶部标题 -->
+  <view class="logo-area">
+    <text class="logo">YOUJEWLRY</text>
+  </view>
+
+  <!-- 登录表单 -->
+  <view class="form">
+    <view class="input-row">
+      <view class="icon">👤</view>
+      <input
+        placeholder="用户名 / 手机号 / 邮箱"
+        value="{{loginAccount}}"
+        data-field="loginAccount"
+        bindinput="onInput"
+      />
+    </view>
+
+    <view class="input-row">
+      <view class="icon">🔒</view>
+      <input
+        placeholder="密码"
+        password="true"
+        value="{{password}}"
+        data-field="password"
+        bindinput="onInput"
+      />
+    </view>
+
+    <button
+      class="btn-login"
+      type="primary"
+      loading="{{loading}}"
+      bindtap="onLoginTap"
+    >
+      登录
+    </button>
+  </view>
+
+  <!-- 注册入口 -->
+  <view class="register-area">
+    <button class="btn-register" bindtap="onRegisterAnchor">
+      注册为主播
+    </button>
+    <button class="btn-register" bindtap="onRegisterAdmin">
+      注册为管理员
+    </button>
+  </view>
+
+  <view class="footer">
+    <text>@ YouJewlry 版权所有</text>
+  </view>
+</view>

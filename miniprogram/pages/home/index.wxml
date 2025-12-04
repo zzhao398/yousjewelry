@@ -1,0 +1,117 @@
+<view class="page">
+
+  <!-- 顶部标题区域（主播 & 管理员共用） -->
+  <view class="section-header">
+    <text class="section-title">主播概况</text>
+    <text class="section-subtitle">欢迎回来，{{displayName || '用户'}}</text>
+  </view>
+
+  <!-- 待发货卡片 -->
+  <view class="card card-pending">
+    <view class="card-row">
+      <view class="card-left">
+        <text class="icon-clock">🕒</text>
+        <text class="card-label">待发货</text>
+      </view>
+      <text class="card-number">{{toShipCount}}</text>
+    </view>
+  </view>
+
+  <!-- 概况卡片（今天） -->
+  <view class="card card-summary">
+
+    <!-- 卡片头部 -->
+    <view class="card-header-row">
+      <text class="card-label">概况</text>
+      <view class="tag-today">今天</view>
+    </view>
+
+    <!-- 主 GMV 居中显示 -->
+    <view class="summary-main-center">
+      <text class="summary-amount">$ {{gmv}}</text>
+    </view>
+
+    <!-- 下方指标 -->
+    <view class="summary-metrics">
+      <view class="metric">
+        <text class="metric-number">{{orderCount}}</text>
+        <text class="metric-label">今日订单</text>
+      </view>
+      <view class="metric">
+        <text class="metric-number">{{gmv}}</text>
+        <text class="metric-label">今日 GMV</text>
+      </view>
+      <view class="metric">
+        <text class="metric-number">{{toShipCount}}</text>
+        <text class="metric-label">待发货</text>
+      </view>
+    </view>
+
+  </view>
+
+  <!-- ========================= -->
+  <!-- 以下是「管理员可见」的部分 -->
+  <!-- ========================= -->
+
+  <!-- 近 7 天趋势（订单数 & GMV） -->
+  <view wx:if="{{isAdmin}}">
+    <view class="section-header">
+      <text class="section-title">近 7 天趋势</text>
+      <text class="section-subtitle">订单数 & GMV（按天）</text>
+    </view>
+
+    <view class="card card-stats">
+      <block wx:if="{{dayStats && dayStats.length}}">
+        <view
+          class="day-row"
+          wx:for="{{dayStats}}"
+          wx:key="day"
+        >
+          <view class="day-left">
+            <text class="day-date">{{item.day}}</text>
+          </view>
+          <view class="day-right">
+            <text class="day-orders">订单 {{item.orderCount}}</text>
+            <text class="day-gmv">GMV {{item.gmv}}</text>
+          </view>
+        </view>
+      </block>
+
+      <view wx:if="{{!dayStats || !dayStats.length}}" class="empty-text">
+        最近 7 天没有订单数据
+      </view>
+    </view>
+  </view>
+
+  <!-- 主播榜单（按 GMV 排序） -->
+  <view wx:if="{{isAdmin}}">
+    <view class="section-header">
+      <text class="section-title">主播榜单</text>
+      <text class="section-subtitle">按 GMV 排序</text>
+    </view>
+
+    <view class="card card-stats">
+      <block wx:if="{{anchorStats && anchorStats.length}}">
+        <view
+          class="anchor-row"
+          wx:for="{{anchorStats}}"
+          wx:key="anchorId"
+        >
+          <view class="anchor-left">
+            <text class="anchor-rank">{{index + 1}}</text>
+            <text class="anchor-id">{{item.anchorId}}</text>
+          </view>
+          <view class="anchor-right">
+            <text class="anchor-gmv">GMV {{item.gmv}}</text>
+            <text class="anchor-orders">订单 {{item.orderCount}}</text>
+          </view>
+        </view>
+      </block>
+
+      <view wx:if="{{!anchorStats || !anchorStats.length}}" class="empty-text">
+        暂无主播数据
+      </view>
+    </view>
+  </view>
+
+</view>

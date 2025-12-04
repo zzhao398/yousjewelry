@@ -1,0 +1,16 @@
+# --- 云函数私密配置 ---
+cloudfunctions/orderSync/config.local.js
+cloudfunctions/ueeshopApi/config.local.js
+
+# --- 微信云开发环境配置 ---
+project.config.json
+project.private.config.json
+
+# --- 本地构建产物 ---
+miniprogram-dist/
+node_modules/
+*.log
+
+# --- VS Code 临时文件 ---
+.vscode/
+.DS_Store

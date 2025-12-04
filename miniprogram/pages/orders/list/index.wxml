@@ -1,0 +1,116 @@
+<!-- pages/orders/list/index.wxml -->
+
+<view class="page">
+
+  <!-- 顶部 Tab -->
+  <view class="tabs">
+    <view
+      class="tab-item {{tab==='all'?'active':''}}"
+      data-tab="all"
+      bindtap="onTabChange"
+    >所有</view>
+
+    <view
+      class="tab-item {{tab==='pending'?'active':''}}"
+      data-tab="pending"
+      bindtap="onTabChange"
+    >待处理</view>
+
+    <view
+      class="tab-item {{tab==='unshipped'?'active':''}}"
+      data-tab="unshipped"
+      bindtap="onTabChange"
+    >未发货</view>
+
+    <view
+      class="tab-item {{tab==='unpaid'?'active':''}}"
+      data-tab="unpaid"
+      bindtap="onTabChange"
+    >未付款</view>
+
+    <view
+      class="tab-item {{tab==='paid'?'active':''}}"
+      data-tab="paid"
+      bindtap="onTabChange"
+    >已付款</view>
+
+    <view
+      class="tab-item {{tab==='shipped'?'active':''}}"
+      data-tab="shipped"
+      bindtap="onTabChange"
+    >已发货</view>
+  </view>
+
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <image class="search-icon" mode="aspectFit"></image>
+    <input
+      class="search-input"
+      placeholder="搜索订单号 / 邮箱 / PID"
+      confirm-type="search"
+      value="{{keyword}}"
+      bindinput="onKeywordInput"
+      bindconfirm="onSearchConfirm"
+    />
+    <view
+      class="search-clear"
+      wx:if="{{keyword}}"
+      bindtap="onSearchClear"
+    >×</view>
+  </view>
+
+  <!-- 列表区域 -->
+  <scroll-view
+    class="list-scroll"
+    scroll-y="true"
+    enable-back-to-top="true"
+  >
+    <block wx:if="{{!list.length && !loading}}">
+      <view class="empty">
+        暂无订单
+      </view>
+    </block>
+
+    <block wx:for="{{list}}" wx:key="oid">
+      <view
+  class="order-card"
+  wx:for="{{list}}"
+  wx:key="oid"
+  data-oid="{{item.oid}}"
+  bindtap="onOrderTap"
+>
+        <!-- 订单号 -->
+        <view class="row row-id">
+          <text class="order-id">{{item.oid}}</text>
+        </view>
+
+        <!-- 金额 -->
+        <view class="row row-amount">
+          <text class="amount-text">{{item.displayAmount}}</text>
+        </view>
+
+        <!-- 邮箱（仅管理员可见） -->
+        <view class="row row-email" wx:if="{{role==='admin'}}">
+          <text class="email-text">{{item.customerEmail}}</text>
+        </view>
+
+        <!-- 状态标签 -->
+        <view class="row row-tags">
+          <view class="tag {{item.shippingTagClass}}">
+            {{item.shippingStatusLabel}}
+          </view>
+          <view class="tag {{item.payTagClass}}">
+            {{item.payStatusLabel}}
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <view class="list-footer" wx:if="{{loading}}">
+      正在加载…
+    </view>
+    <view class="list-footer" wx:if="{{finished && list.length}}">
+      没有更多了
+    </view>
+  </scroll-view>
+</view>

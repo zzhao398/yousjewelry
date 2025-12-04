@@ -1,0 +1,9 @@
+{
+    "name": "monitorSync",
+    "version": "1.0.0",
+    "description": "Ueeshop 小程序统一云函数入口",
+    "main": "index.js",
+    "dependencies": {
+      "wx-server-sdk": "latest"
+    }
+  }

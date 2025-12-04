@@ -1,0 +1,58 @@
+<view class="container">
+
+  <!-- 列表 -->
+  <view wx:for="{{list}}" wx:key="_id" class="item">
+    <view>
+      <text class="label">PID：</text>{{item.productId}}
+    </view>
+    <view>
+      <text class="label">商品名称：</text>{{item.productName}}
+    </view>
+    <view>
+      <text class="label">主播：</text>{{item.anchorName}}
+    </view>
+
+    <button size="mini" data-item="{{item}}" bindtap="onEdit">编辑</button>
+    <button size="mini" data-id="{{item._id}}" bindtap="onDelete" type="warn">删除</button>
+  </view>
+
+  <button class="add-btn" bindtap="onAdd">新增 PID 绑定</button>
+
+  <!-- 表单 -->
+  <view wx:if="{{showForm}}" class="form">
+
+    <view class="row">
+      <text>PID</text>
+      <input data-field="productId" placeholder="商品 productId" value="{{editing.productId}}" bindinput="onInput"/>
+    </view>
+
+    <view class="row">
+      <text>商品名称</text>
+      <input data-field="productName" placeholder="可选" value="{{editing.productName}}" bindinput="onInput"/>
+    </view>
+
+    <view class="row">
+      <text>主播ID</text>
+      <input data-field="anchorId" placeholder="主播唯一ID" value="{{editing.anchorId}}" bindinput="onInput"/>
+    </view>
+
+    <view class="row">
+      <text>主播名称</text>
+      <input data-field="anchorName" placeholder="主播显示名称" value="{{editing.anchorName}}" bindinput="onInput"/>
+    </view>
+
+    <view class="row">
+      <text>佣金比例%</text>
+      <input data-field="commissionRate" type="number" value="{{editing.commissionRate}}" bindinput="onInput"/>
+    </view>
+
+    <view class="row">
+      <text>优先级</text>
+      <input data-field="priority" type="number" value="{{editing.priority}}" bindinput="onInput"/>
+    </view>
+
+    <button bindtap="onSubmit" type="primary">保存</button>
+    <button bindtap="onCancel">取消</button>
+  </view>
+
+</view>

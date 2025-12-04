@@ -1,0 +1,45 @@
+/* pages/register/index.wxss */
+
+.page {
+    padding: 40rpx;
+    background-color: #f7f7f7;
+    min-height: 100vh;
+  }
+  
+  .header {
+    margin-bottom: 40rpx;
+  }
+  
+  .title {
+    font-size: 36rpx;
+    font-weight: 600;
+  }
+  
+  .form-item {
+    margin-bottom: 28rpx;
+  }
+  
+  .label {
+    display: block;
+    margin-bottom: 10rpx;
+    font-size: 26rpx;
+    color: #666666;
+  }
+  
+  input,
+  textarea {
+    background-color: #ffffff;
+    border-radius: 16rpx;
+    padding: 20rpx;
+    font-size: 28rpx;
+    border: 1rpx solid #e5e5e5;
+  }
+  
+  textarea {
+    min-height: 140rpx;
+  }
+  
+  .btn-submit {
+    margin-top: 30rpx;
+  }
+  

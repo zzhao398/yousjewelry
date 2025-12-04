@@ -1,0 +1,35 @@
+{
+    "pages": [
+      "pages/login/index",
+      "pages/home/index",
+      "pages/orders/list/index",
+      "pages/orders/detail/index",
+      "pages/mine/index",
+      "pages/admin/index",
+      "pages/admin/anchor-approve/index",
+      "pages/admin/anchor-list/index",
+      "pages/register/index"
+    ],
+    "tabBar": {
+      "color": "#999999",
+      "selectedColor": "#00b26a",
+      "backgroundColor": "#ffffff",
+      "borderStyle": "black",
+      "list": [
+        {
+          "pagePath": "pages/home/index",
+          "text": "首页"
+        },
+        {
+          "pagePath": "pages/orders/list/index",
+          "text": "订单"
+        },
+        {
+          "pagePath": "pages/mine/index",
+          "text": "我的"
+        }
+      ]
+    }
+  }
+  
+  

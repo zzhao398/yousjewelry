@@ -1,0 +1,122 @@
+<view class="page">
+  <view class="header">
+    <text class="title">
+      {{ role === 'admin' ? '管理员注册' : '主播注册' }}
+    </text>
+  </view>
+
+  <view class="form">
+    <view class="form-item">
+      <text class="label">姓名</text>
+      <input
+        placeholder="请输入真实姓名"
+        value="{{realName}}"
+        data-field="realName"
+        bindinput="onInput"
+      />
+    </view>
+
+    <view class="form-item">
+      <text class="label">显示昵称</text>
+      <input
+        placeholder="页面展示时的名字"
+        value="{{displayName}}"
+        data-field="displayName"
+        bindinput="onInput"
+      />
+    </view>
+
+    <view class="form-item">
+      <text class="label">登录账号</text>
+      <input
+        placeholder="手机号或邮箱"
+        value="{{loginAccount}}"
+        data-field="loginAccount"
+        bindinput="onInput"
+      />
+    </view>
+
+    <view class="form-item">
+      <text class="label">密码</text>
+      <input
+        password="true"
+        placeholder="请设置密码"
+        value="{{password}}"
+        data-field="password"
+        bindinput="onInput"
+      />
+    </view>
+
+    <view class="form-item">
+      <text class="label">确认密码</text>
+      <input
+        password="true"
+        placeholder="请再输入一次密码"
+        value="{{confirmPassword}}"
+        data-field="confirmPassword"
+        bindinput="onInput"
+      />
+    </view>
+
+    <view class="form-item">
+      <text class="label">手机号</text>
+      <input
+        placeholder="选填"
+        value="{{phone}}"
+        data-field="phone"
+        bindinput="onInput"
+      />
+    </view>
+
+    <view class="form-item">
+      <text class="label">邮箱</text>
+      <input
+        placeholder="选填"
+        value="{{email}}"
+        data-field="email"
+        bindinput="onInput"
+      />
+    </view>
+
+    <block wx:if="{{role === 'anchor'}}">
+      <view class="form-item">
+        <text class="label">平台</text>
+        <input
+          placeholder="如 抖音 / TikTok（选填）"
+          value="{{platform}}"
+          data-field="platform"
+          bindinput="onInput"
+        />
+      </view>
+
+      <view class="form-item">
+        <text class="label">账号ID</text>
+        <input
+          placeholder="选填"
+          value="{{accountId}}"
+          data-field="accountId"
+          bindinput="onInput"
+        />
+      </view>
+    </block>
+
+    <view class="form-item">
+      <text class="label">备注</text>
+      <textarea
+        placeholder="选填，例如擅长平台、商品等"
+        value="{{remark}}"
+        data-field="remark"
+        bindinput="onInput"
+      />
+    </view>
+
+    <button
+      class="btn-submit"
+      type="primary"
+      loading="{{submitting}}"
+      bindtap="onSubmit"
+    >
+      提交注册
+    </button>
+  </view>
+</view>

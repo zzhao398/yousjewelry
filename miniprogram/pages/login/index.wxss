@@ -1,0 +1,88 @@
+.page {
+  min-height: 100vh;
+  background-color: #03b48e; /* 近似 Ueeshop 绿 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo-area {
+  margin-top: 80rpx;
+  align-items: center;
+  text-align: center;
+  color: #ffffff;
+}
+
+.sub-title {
+  font-size: 26rpx;
+  opacity: 0.9;
+}
+
+.logo {
+  margin-top: 40rpx;
+  font-size: 64rpx;
+  font-weight: 700;
+  letter-spacing: 4rpx;
+}
+
+.form {
+  width: 80%;
+  margin-top: 80rpx;
+}
+
+.input-row {
+  display: flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 999rpx;
+  padding: 0 40rpx;
+  margin-bottom: 30rpx;
+  border: 1rpx solid rgba(255, 255, 255, 0.6);
+}
+
+.icon {
+  margin-right: 20rpx;
+  font-size: 30rpx;
+  color: #ffffff;
+}
+
+input {
+  flex: 1;
+  height: 88rpx;
+  line-height: 88rpx;
+  color: #ffffff;
+}
+
+input::placeholder {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.btn-login {
+  margin-top: 20rpx;
+  border-radius: 999rpx;
+  background-color: #ffffff;
+  color: #03b48e;
+  font-size: 32rpx;
+}
+
+.register-area {
+  width: 80%;
+  margin-top: 40rpx;
+}
+
+.btn-register {
+  margin-top: 16rpx;
+  border-radius: 999rpx;
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  font-size: 28rpx;
+  border: 1rpx solid rgba(255, 255, 255, 0.7);
+}
+
+.footer {
+  position: fixed;
+  bottom: 40rpx;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 24rpx;
+}

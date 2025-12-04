@@ -1,0 +1,195 @@
+.page {
+  min-height: 100vh;
+  background-color: #f5f6f7;
+  padding: 32rpx 32rpx 160rpx; /* 预留 tabBar 位置 */
+  box-sizing: border-box;
+}
+
+/* 顶部标题 */
+.section-header {
+  text-align: center;
+  margin-bottom: 24rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+}
+.section-subtitle {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 通用卡片 */
+.card {
+  background-color: #fff;
+  border-radius: 20rpx;
+  padding: 24rpx 28rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 6rpx 20rpx rgba(0, 0, 0, 0.04);
+}
+
+/* 待发货 */
+.card-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.card-left {
+  display: flex;
+  align-items: center;
+}
+.icon-clock {
+  font-size: 32rpx;
+  margin-right: 12rpx;
+}
+.card-number {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #00b26a;
+}
+
+/* 卡片头部 */
+.card-header-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 24rpx;
+}
+
+.tag-today {
+  padding: 4rpx 16rpx;
+  background-color: #f3f4f5;
+  border-radius: 999rpx;
+  font-size: 22rpx;
+  color: #666;
+}
+
+/* ———— 🔥 GMV 居中样式 ———— */
+.summary-main-center {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 12rpx 0 20rpx;
+}
+
+.summary-amount {
+  font-size: 42rpx;
+  font-weight: 700;
+  color: #00b26a;
+}
+
+/* 下方三列指标 */
+.summary-metrics {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12rpx;
+}
+.metric {
+  flex: 1;
+  text-align: center;
+}
+.metric-number {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+}
+.metric-label {
+  margin-top: 6rpx;
+  font-size: 22rpx;
+  color: #999;
+}
+
+/* 管理员统计卡片 */
+.card-stats {
+  margin-top: 24rpx;
+  padding: 24rpx;
+  background: #ffffff;
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.04);
+}
+
+/* 日统计行 */
+.day-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #f2f2f2;
+}
+
+.day-row:last-child {
+  border-bottom-width: 0;
+}
+
+.day-left {
+  flex: 1;
+}
+
+.day-date {
+  font-size: 26rpx;
+  color: #333;
+}
+
+.day-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.day-orders,
+.day-gmv {
+  font-size: 24rpx;
+  color: #666;
+}
+
+/* 主播榜单行 */
+.anchor-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #f2f2f2;
+}
+
+.anchor-row:last-child {
+  border-bottom-width: 0;
+}
+
+.anchor-left {
+  display: flex;
+  align-items: center;
+}
+
+.anchor-rank {
+  width: 40rpx;
+  text-align: center;
+  font-weight: 600;
+  color: #ff7a45;
+  margin-right: 16rpx;
+}
+
+.anchor-id {
+  font-size: 26rpx;
+  color: #333;
+}
+
+.anchor-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.anchor-gmv,
+.anchor-orders {
+  font-size: 24rpx;
+  color: #666;
+}
+
+/* 空状态 */
+.empty-text {
+  text-align: center;
+  padding: 32rpx 0;
+  font-size: 24rpx;
+  color: #999;
+}
