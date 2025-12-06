@@ -1,5 +1,5 @@
 # --- 云函数私密配置 ---
-cloudfunctions/orderSync/config.local.js
+cloudfunctions/orderSync/utils/config.local.js
 cloudfunctions/ueeshopApi/config.local.js
 
 # --- 微信云开发环境配置 ---

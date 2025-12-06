@@ -53,11 +53,42 @@
   <!-- 以下是「管理员可见」的部分 -->
   <!-- ========================= -->
 
-  <!-- 近 7 天趋势（订单数 & GMV） -->
+  <!-- 趋势 + 时间范围切换 -->
   <view wx:if="{{isAdmin}}">
     <view class="section-header">
-      <text class="section-title">近 7 天趋势</text>
-      <text class="section-subtitle">订单数 & GMV（按天）</text>
+      <text class="section-title">
+        近
+        {{ range === '7d' ? '7 天' : (range === '30d' ? '30 天' : (range === '1y' ? '1 年' : '全部')) }}
+        趋势
+      </text>
+      <text class="section-subtitle">订单数 &amp; GMV（按天）</text>
+    </view>
+
+    <!-- 时间范围 tabs -->
+    <view class="range-tabs">
+      <view
+        class="range-tab {{range === '7d' ? 'active' : ''}}"
+        data-range="7d"
+        bindtap="onRangeChange"
+      >7天</view>
+
+      <view
+        class="range-tab {{range === '30d' ? 'active' : ''}}"
+        data-range="30d"
+        bindtap="onRangeChange"
+      >30天</view>
+
+      <view
+        class="range-tab {{range === '1y' ? 'active' : ''}}"
+        data-range="1y"
+        bindtap="onRangeChange"
+      >1年</view>
+
+      <view
+        class="range-tab {{range === 'all' ? 'active' : ''}}"
+        data-range="all"
+        bindtap="onRangeChange"
+      >全部</view>
     </view>
 
     <view class="card card-stats">
@@ -78,16 +109,18 @@
       </block>
 
       <view wx:if="{{!dayStats || !dayStats.length}}" class="empty-text">
-        最近 7 天没有订单数据
+        当前时间范围内没有订单数据
       </view>
     </view>
   </view>
 
-  <!-- 主播榜单（按 GMV 排序） -->
+  <!-- 主播榜单（按 GMV 排序，使用同一时间范围） -->
   <view wx:if="{{isAdmin}}">
     <view class="section-header">
       <text class="section-title">主播榜单</text>
-      <text class="section-subtitle">按 GMV 排序</text>
+      <text class="section-subtitle">
+        按 GMV 排序（当前时间范围）
+      </text>
     </view>
 
     <view class="card card-stats">
@@ -109,7 +142,7 @@
       </block>
 
       <view wx:if="{{!anchorStats || !anchorStats.length}}" class="empty-text">
-        暂无主播数据
+        当前时间范围内暂无主播数据
       </view>
     </view>
   </view>

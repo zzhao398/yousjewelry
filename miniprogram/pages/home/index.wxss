@@ -193,3 +193,27 @@
   font-size: 24rpx;
   color: #999;
 }
+/* 时间范围 tabs 样式 */
+.range-tabs {
+  margin: 0 24rpx 16rpx;
+  padding: 8rpx;
+  background: #f7f7f7;
+  border-radius: 999rpx;
+  display: flex;
+  justify-content: space-between;
+}
+
+.range-tab {
+  flex: 1;
+  text-align: center;
+  font-size: 24rpx;
+  padding: 10rpx 0;
+  border-radius: 999rpx;
+  color: #666;
+}
+
+.range-tab.active {
+  background: #ffffff;
+  font-weight: 600;
+  color: #00b578; /* 你可以换成你现在用的主题色 */
+}

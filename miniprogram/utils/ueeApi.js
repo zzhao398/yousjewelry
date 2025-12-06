@@ -164,6 +164,11 @@ const login = (loginAccount, password) =>
 
 const listPendingUsers = () => call('users.listPending');
 
+// 审核用户（通过 / 拒绝）
+const approveUser = (params) =>
+  call('users.approve', params || {});
+
+
 function listAnchors() {
   const g = ensureGlobalCache();
   const now = Date.now();
@@ -209,4 +214,5 @@ module.exports = {
   listAnchors,
   setAnchorProducts,
   clearAllCaches,
+  approveUser,
 };

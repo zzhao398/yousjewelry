@@ -280,7 +280,38 @@ const handleOrdersList = async (event = {}) => {
   return { list: safeList, page, pageSize, role };
 };
 
-
+// 工具：把 orders_slim 指定 where 条件下的所有数据一次性拉完
+// 注意：单次 get() 最多 100 条，因此用 skip+limit 分批
+const fetchAllOrdersSlim = async (where = {}) => {
+    const coll = db.collection('orders_slim');
+    const MAX_LIMIT = 100;
+  
+    // 先 count 一下总数
+    const countRes = await coll.where(where).count();
+    const total = countRes.total || 0;
+    if (!total) return [];
+  
+    const batchTimes = Math.ceil(total / MAX_LIMIT);
+    const tasks = [];
+  
+    for (let i = 0; i < batchTimes; i++) {
+      tasks.push(
+        coll
+          .where(where)
+          .skip(i * MAX_LIMIT)
+          .limit(MAX_LIMIT)
+          .get()
+      );
+    }
+  
+    const results = await Promise.all(tasks);
+    let all = [];
+    results.forEach((res) => {
+      all = all.concat(res.data || []);
+    });
+  
+    return all;
+  };
 
 // =========================
 // 最终版 handleOrdersDetail
@@ -345,131 +376,137 @@ return {
   
 
 /** 简单首页概况：今天 */
-const handleDashboardSummary = async (event) => {
-  const { role, anchorId } = await getUserRole();
-
-  const now = new Date();
-  const startOfDay = Math.floor(
-    new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate(),
-    ).getTime() / 1000,
-  );
-
-  const where = { orderCreatedAt: _.gte(startOfDay) };
-
-  if (role === 'anchor') {
-    where.anchorIdList = _.elemMatch(_.eq(anchorId));
-    where.visibleToAnchors = true;
-  } else if (role === 'admin') {
-    if (event.anchorId) {
-      where.anchorIdList = _.elemMatch(_.eq(event.anchorId));
-    }
-    if (event.channelType) {
-      where.channelType = event.channelType;
-    }
-  }
-
-  const { data } = await db.collection('orders_slim').where(where).get();
-
-  const summary = data.reduce(
-    (acc, o) => {
-      acc.orderCount += 1;
-      acc.gmv += Number(o.orderTotalPrice || 0);
-      if (o.shippingStatus === 'unshipped' && o.paymentStatus === 'paid') {
-        acc.toShipCount += 1;
-      }
-      return acc;
-    },
-    { orderCount: 0, gmv: 0, toShipCount: 0 },
-  );
-
-  return { ...summary, role };
-};
-
 /** D+B: 管理员高级统计，用于图表/看板 */
 const handleDashboardMetrics = async (event) => {
-  const { role } = await getUserRole();
-  if (!['owner', 'admin'].includes(role)) {
-    throw new Error('ADMIN_ONLY');
-  }
-
-  const {
-    dateRange = {},    // { startSec, endSec }
-    groupBy = 'day',   // 'day' | 'anchor'
-  } = event || {};
-
-  const where = {};
-
-  if (dateRange.startSec && dateRange.endSec) {
-    where.orderCreatedAt = _.gte(dateRange.startSec).and(_.lte(dateRange.endSec));
-  }
-
-  const { data } = await db.collection('orders_slim').where(where).get();
-
-  if (groupBy === 'anchor') {
-    // 每主播统计：订单数 / GMV / 佣金
-    const anchorStatsMap = new Map();
-    data.forEach((o) => {
-      const anchors = o.anchorIdList || [];
-      const amt = Number(o.orderTotalPrice || 0);
-      const commission = Number(o.anchorCommissionAmount || 0);
-
-      if (!anchors.length) {
-        // 非主播单归入 'organic'
-        const prev = anchorStatsMap.get('organic') || {
-          anchorId: 'organic',
-          orderCount: 0,
-          gmv: 0,
-          commission: 0,
-        };
-        prev.orderCount += 1;
-        prev.gmv += amt;
-        prev.commission += 0;
-        anchorStatsMap.set('organic', prev);
-      } else {
-        anchors.forEach((aid) => {
-          const prev = anchorStatsMap.get(aid) || {
-            anchorId: aid,
+    const { role } = await getUserRole();
+    if (!['owner', 'admin'].includes(role)) {
+      throw new Error('ADMIN_ONLY');
+    }
+  
+    const {
+      dateRange = {},    // { startSec, endSec }
+      groupBy = 'day',   // 'day' | 'anchor'
+    } = event || {};
+  
+    const where = {};
+  
+    if (dateRange.startSec && dateRange.endSec) {
+      where.orderCreatedAt = _.gte(dateRange.startSec).and(_.lte(dateRange.endSec));
+    }
+  
+    // ⭐ 关键：一次性拉完所有满足条件的订单（突破 100 条的限制）
+    const data = await fetchAllOrdersSlim(where);
+  
+    if (groupBy === 'anchor') {
+      // 每主播统计：订单数 / GMV / 佣金
+      const anchorStatsMap = new Map();
+      data.forEach((o) => {
+        const anchors = o.anchorIdList || [];
+        const amt = Number(o.orderTotalPrice || 0);
+        const commission = Number(o.anchorCommissionAmount || 0);
+  
+        if (!anchors.length) {
+          // 非主播单归入 'organic'
+          const prev = anchorStatsMap.get('organic') || {
+            anchorId: 'organic',
             orderCount: 0,
             gmv: 0,
             commission: 0,
           };
           prev.orderCount += 1;
           prev.gmv += amt;
-          prev.commission += commission / anchors.length; // 均分佣金
-          anchorStatsMap.set(aid, prev);
-        });
-      }
+          prev.commission += 0;
+          anchorStatsMap.set('organic', prev);
+        } else {
+          anchors.forEach((aid) => {
+            const prev = anchorStatsMap.get(aid) || {
+              anchorId: aid,
+              orderCount: 0,
+              gmv: 0,
+              commission: 0,
+            };
+            prev.orderCount += 1;
+            prev.gmv += amt;
+            prev.commission += commission / anchors.length; // 均分佣金
+            anchorStatsMap.set(aid, prev);
+          });
+        }
+      });
+  
+      const anchorStats = Array.from(anchorStatsMap.values());
+      return { groupBy: 'anchor', anchorStats };
+    }
+  
+    // 默认 groupBy = 'day'：按日期聚合
+    const dayStatsMap = new Map();
+    data.forEach((o) => {
+      const day = o.orderDate || 'unknown';
+      const prev = dayStatsMap.get(day) || {
+        day,
+        orderCount: 0,
+        gmv: 0,
+        commission: 0,
+      };
+      prev.orderCount += 1;
+      prev.gmv += Number(o.orderTotalPrice || 0);
+      prev.commission += Number(o.anchorCommissionAmount || 0);
+      dayStatsMap.set(day, prev);
     });
+  
+    const dayStats = Array.from(dayStatsMap.values()).sort((a, b) =>
+      a.day.localeCompare(b.day),
+    );
+  
+    return { groupBy: 'day', dayStats };
+  };
+  
 
-    const anchorStats = Array.from(anchorStatsMap.values());
-    return { groupBy: 'anchor', anchorStats };
-  }
-
-  // 默认 groupBy = 'day'：按日期聚合
-  const dayStatsMap = new Map();
-  data.forEach((o) => {
-    const day = o.orderDate || 'unknown';
-    const prev = dayStatsMap.get(day) || {
-      day,
-      orderCount: 0,
-      gmv: 0,
-      commission: 0,
-    };
-    prev.orderCount += 1;
-    prev.gmv += Number(o.orderTotalPrice || 0);
-    prev.commission += Number(o.anchorCommissionAmount || 0);
-    dayStatsMap.set(day, prev);
-  });
-
-  const dayStats = Array.from(dayStatsMap.values()).sort((a, b) =>
-    a.day.localeCompare(b.day),
-  );
-
-  return { groupBy: 'day', dayStats };
-};
+  /** 简单首页概况：今天 */
+const handleDashboardSummary = async (event) => {
+    const { role, anchorId } = await getUserRole();
+  
+    const now = new Date();
+    const startOfDay = Math.floor(
+      new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+      ).getTime() / 1000,
+    );
+  
+    const where = { orderCreatedAt: _.gte(startOfDay) };
+  
+    if (role === 'anchor') {
+      // 主播：只看自己 + 仅对主播可见的订单
+      where.anchorIdList = _.elemMatch(_.eq(anchorId));
+      where.visibleToAnchors = true;
+    } else if (role === 'admin') {
+      // 管理员：可以按 anchorId / channelType 过滤
+      if (event && event.anchorId) {
+        where.anchorIdList = _.elemMatch(_.eq(event.anchorId));
+      }
+      if (event && event.channelType) {
+        where.channelType = event.channelType;
+      }
+    }
+  
+    const { data } = await db.collection('orders_slim').where(where).get();
+  
+    const summary = data.reduce(
+      (acc, o) => {
+        acc.orderCount += 1;
+        acc.gmv += Number(o.orderTotalPrice || 0);
+        if (o.shippingStatus === 'unshipped' && o.paymentStatus === 'paid') {
+          acc.toShipCount += 1;
+        }
+        return acc;
+      },
+      { orderCount: 0, gmv: 0, toShipCount: 0 },
+    );
+  
+    return { ...summary, role };
+  };
+  
 
 /** 订单搜索（支持 OID / 邮箱 / PID / 国家 + 时间区间 + 状态）
  *  参数约定：
