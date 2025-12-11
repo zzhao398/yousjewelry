@@ -2,14 +2,16 @@
 //
 // 职责：
 // - 加载首页概况（今日订单数 / GMV / 待发货）
-// - 管理员：额外看到 7 天 GMV/订单数曲线 + 按主播统计
-// - 主播：只看自己的概况
+// - 管理员：额外看到 GMV/订单数曲线 + 按主播统计
+// - 主播：看到自己的趋势曲线，但看不到排行榜
 // - 支持下拉刷新（带节流）
 
 const { getMe, getDashboardSummary } = require('../../utils/ueeApi');
 const { call } = require('../../utils/request');
 const { withThrottle } = require('../../utils/throttle');
 const { log } = require('../../utils/logger');
+const i18n = require('../../utils/i18n');
+const app = getApp();
 
 Page({
   data: {
@@ -23,19 +25,67 @@ Page({
     gmv: 0,
     toShipCount: 0,
 
-    // 管理员统计用
+    // 趋势统计
     dayStats: [],         // [{ day, orderCount, gmv, commission }]
     anchorStats: [],      // [{ anchorId, orderCount, gmv, commission }]
 
     loading: false,
-    range: '7d',
+    range: '7d',          // 7d | 30d | 1y | all
+
+    // ====== 多语言相关 ======
+    lang: i18n.getCurrentLang(),        // 当前语言 zh/en
+    tCommon: i18n.getDict().common,     // 公共文案
+    tHome: i18n.getDict().home,         // 首页文案
+    langMenuVisible: false,             // 右上角语言下拉菜单
   },
 
   onLoad() {
     this.fetchAll();
   },
 
-  // ========== 新增：根据当前 range 计算秒级时间区间 ==========
+  onShow() {
+    // 从其他页面返回时，如果语言变了，这里刷新一下文案
+    this.refreshI18n();
+  },
+
+  // ====== 刷新当前页面用到的文案 ======
+  refreshI18n() {
+    const dict = i18n.getDict();
+    this.setData({
+      lang: i18n.getCurrentLang(),
+      tCommon: dict.common,
+      tHome: dict.home,
+    });
+  },
+
+  // ====== 右上角语言按钮：展开 / 收起菜单 ======
+  onLangButtonTap() {
+    this.setData({
+      langMenuVisible: !this.data.langMenuVisible,
+    });
+  },
+
+  // ====== 在菜单里选择具体语言 ======
+  onSelectLang(e) {
+    const lang = e.currentTarget.dataset.lang; // 'zh' or 'en'
+
+    // 让 app.js 处理全局语言 + tabBar
+    if (app && typeof app.switchLang === 'function') {
+      app.switchLang(lang);
+    } else {
+      // 兜底：至少把语言存起来
+      i18n.setCurrentLang(lang);
+    }
+
+    // 刷新本页文案
+    this.refreshI18n();
+
+    this.setData({
+      langMenuVisible: false,
+    });
+  },
+
+  // ========== 根据当前 range 计算秒级时间区间 ==========
   getDateRangeSec() {
     const nowSec = Math.floor(Date.now() / 1000);
     const r = this.data.range;
@@ -55,7 +105,7 @@ Page({
     return { startSec, endSec: nowSec };
   },
 
-// ====== 工具：把日期字符串映射到“周 key” ======
+  // ====== 工具：把日期字符串映射到“周 key” ======
   // 返回类似：2025-W48
   getWeekKey(dayStr) {
     if (!dayStr) return 'unknown';
@@ -140,16 +190,29 @@ Page({
 
     return list;
   },
-  
-  // ====== 管理员图表数据 ======
-  fetchMetrics() {
-    if (!this.data.isAdmin) {
-      return Promise.resolve();
-    }
 
+  // ====== 管理员 / 主播 图表数据 ======
+  fetchMetrics() {
+    const { isAdmin } = this.data;
     const { startSec, endSec } = this.getDateRangeSec();
     const baseParams = { dateRange: { startSec, endSec } };
 
+    if (!isAdmin) {
+      // ⭐ 主播：只看自己的按天趋势，不要 anchor 榜单
+      return call('dashboard.metrics', {
+        ...baseParams,
+        groupBy: 'day',
+      }).then((dayRes) => {
+        const rawDayStats = (dayRes && dayRes.dayStats) || [];
+        const dayStats = this.transformDayStatsByRange(rawDayStats);
+        this.setData({
+          dayStats,
+          anchorStats: [],   // 主播没有榜单
+        });
+      });
+    }
+
+    // ⭐ 管理员：按天 + 按主播
     const pDay = call('dashboard.metrics', {
       ...baseParams,
       groupBy: 'day',
@@ -171,7 +234,7 @@ Page({
     });
   },
 
-  // 同时拉 用户信息 + 今日概况 +（如果是管理员）近 7 天统计
+  // 同时拉 用户信息 + 今日概况 + 趋势
   fetchAll() {
     this.setData({ loading: true });
 
@@ -188,47 +251,18 @@ Page({
         });
 
         const pSummary = getDashboardSummary();
-
-        // 管理员才去调 dashboard.metrics
-        let pMetrics = Promise.resolve([null, null]);
-        if (isAdmin) {
-          const nowSec = Math.floor(Date.now() / 1000);
-          const sevenDaysAgo = nowSec - 7 * 24 * 3600;
-
-          const baseParams = { dateRange: { startSec: sevenDaysAgo, endSec: nowSec } };
-
-          const pDay = call('dashboard.metrics', {
-            ...baseParams,
-            groupBy: 'day',
-          });
-
-          const pAnchor = call('dashboard.metrics', {
-            ...baseParams,
-            groupBy: 'anchor',
-          });
-
-          pMetrics = Promise.all([pDay, pAnchor]);
-        }
+        const pMetrics = this.fetchMetrics(); // 管理员 / 主播 都有趋势
 
         return Promise.all([pSummary, pMetrics]);
       })
-      .then(([summary, metrics]) => {
-        const [dayRes, anchorRes] = metrics || [];
-
-        // 今日概况（主播和管理员都有）
+      .then(([summary]) => {
+        // 今日概况
         this.setData({
           orderCount: (summary && summary.orderCount) || 0,
           gmv: (summary && summary.gmv) || 0,
           toShipCount: (summary && summary.toShipCount) || 0,
         });
-
-        // 只有管理员才设置 dayStats / anchorStats
-        if (this.data.isAdmin) {
-          this.setData({
-            dayStats: (dayRes && dayRes.dayStats) || [],
-            anchorStats: (anchorRes && anchorRes.anchorStats) || [],
-          });
-        }
+        // dayStats / anchorStats 已在 fetchMetrics 里 setData 了
       })
       .catch((err) => {
         console.error('home.fetchAll error', err);
@@ -238,7 +272,8 @@ Page({
         this.setData({ loading: false });
       });
   },
-   // ========== 新增：时间范围切换 ==========
+
+  // ========== 时间范围切换 ==========
   // WXML 里用 data-range="7d|30d|1y|all" 绑定到这个函数
   onRangeChange(e) {
     const r = e.currentTarget.dataset.range || '7d';

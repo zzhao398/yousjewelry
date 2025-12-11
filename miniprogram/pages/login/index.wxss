@@ -86,3 +86,36 @@ input::placeholder {
   color: rgba(255, 255, 255, 0.9);
   font-size: 24rpx;
 }
+
+.lang-switcher {
+    position: absolute;
+    top: 20rpx;
+    right: 20rpx;
+    z-index: 1000;
+  }
+  
+  .lang-btn {
+    padding: 8rpx 16rpx;
+    border-radius: 24rpx;
+    font-size: 24rpx;
+    background-color: #ffffff;
+    box-shadow: 0 0 8rpx rgba(0, 0, 0, 0.08);
+  }
+  
+  .lang-menu {
+    margin-top: 8rpx;
+    background-color: #ffffff;
+    border-radius: 16rpx;
+    box-shadow: 0 0 12rpx rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+  }
+  
+  .lang-item {
+    padding: 12rpx 20rpx;
+    font-size: 24rpx;
+  }
+  
+  .lang-item + .lang-item {
+    border-top: 1px solid #f0f0f0;
+  }
+  

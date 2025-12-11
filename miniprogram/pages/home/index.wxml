@@ -1,150 +1,196 @@
+<!-- pages/home/index.wxml -->
+
 <view class="page">
 
-  <!-- 顶部标题区域（主播 & 管理员共用） -->
+<!-- 右上角语言切换 -->
+<view class="lang-switcher">
+  <view class="lang-btn" bindtap="onLangButtonTap">
+    <text>language 语言</text>
+  </view>
+
+  <view wx:if="{{langMenuVisible}}" class="lang-menu">
+    <view class="lang-item" data-lang="zh" bindtap="onSelectLang">
+      <text>{{tCommon.lang_zh}}</text>
+    </view>
+    <view class="lang-item" data-lang="en" bindtap="onSelectLang">
+      <text>{{tCommon.lang_en}}</text>
+    </view>
+  </view>
+</view>
+
+<!-- 顶部标题区域（主播 & 管理员共用） -->
+<view class="section-header">
+  <text class="section-title">{{tHome.section_title}}</text>
+  <text class="section-subtitle">
+    <!-- 简单字符串替换：把 {{name}} 替换成 displayName -->
+    {{
+      tHome.welcome.replace(
+        '{{name}}',
+        displayName || (lang === 'zh' ? '用户' : 'User')
+      )
+    }}
+  </text>
+</view>
+
+<!-- 待发货卡片 -->
+<view class="card card-pending">
+  <view class="card-row">
+    <view class="card-left">
+      <text class="icon-clock">🕒</text>
+      <text class="card-label">{{tHome.pending_label}}</text>
+    </view>
+    <text class="card-number">{{toShipCount}}</text>
+  </view>
+</view>
+
+<!-- 概况卡片（今天） -->
+<view class="card card-summary">
+
+  <!-- 卡片头部 -->
+  <view class="card-header-row">
+    <text class="card-label">{{tHome.summary_label}}</text>
+    <view class="tag-today">{{tHome.tag_today}}</view>
+  </view>
+
+  <!-- 主 GMV 居中显示 -->
+  <view class="summary-main-center">
+    <text class="summary-amount">$ {{gmv}}</text>
+  </view>
+
+  <!-- 下方指标 -->
+  <view class="summary-metrics">
+    <view class="metric">
+      <text class="metric-number">{{orderCount}}</text>
+      <text class="metric-label">{{tHome.metric_order_count}}</text>
+    </view>
+    <view class="metric">
+      <text class="metric-number">{{gmv}}</text>
+      <text class="metric-label">{{tHome.metric_gmv}}</text>
+    </view>
+    <view class="metric">
+      <text class="metric-number">{{toShipCount}}</text>
+      <text class="metric-label">{{tHome.metric_to_ship}}</text>
+    </view>
+  </view>
+
+</view>
+
+<!-- ===================================================== -->
+<!-- 趋势 + 时间范围切换：管理员 + 主播 都能看到自己的趋势 -->
+<!-- ===================================================== -->
+<view wx:if="{{isAdmin || role === 'anchor'}}">
   <view class="section-header">
-    <text class="section-title">主播概况</text>
-    <text class="section-subtitle">欢迎回来，{{displayName || '用户'}}</text>
-  </view>
-
-  <!-- 待发货卡片 -->
-  <view class="card card-pending">
-    <view class="card-row">
-      <view class="card-left">
-        <text class="icon-clock">🕒</text>
-        <text class="card-label">待发货</text>
-      </view>
-      <text class="card-number">{{toShipCount}}</text>
-    </view>
-  </view>
-
-  <!-- 概况卡片（今天） -->
-  <view class="card card-summary">
-
-    <!-- 卡片头部 -->
-    <view class="card-header-row">
-      <text class="card-label">概况</text>
-      <view class="tag-today">今天</view>
-    </view>
-
-    <!-- 主 GMV 居中显示 -->
-    <view class="summary-main-center">
-      <text class="summary-amount">$ {{gmv}}</text>
-    </view>
-
-    <!-- 下方指标 -->
-    <view class="summary-metrics">
-      <view class="metric">
-        <text class="metric-number">{{orderCount}}</text>
-        <text class="metric-label">今日订单</text>
-      </view>
-      <view class="metric">
-        <text class="metric-number">{{gmv}}</text>
-        <text class="metric-label">今日 GMV</text>
-      </view>
-      <view class="metric">
-        <text class="metric-number">{{toShipCount}}</text>
-        <text class="metric-label">待发货</text>
-      </view>
-    </view>
-
-  </view>
-
-  <!-- ========================= -->
-  <!-- 以下是「管理员可见」的部分 -->
-  <!-- ========================= -->
-
-  <!-- 趋势 + 时间范围切换 -->
-  <view wx:if="{{isAdmin}}">
-    <view class="section-header">
-      <text class="section-title">
-        近
-        {{ range === '7d' ? '7 天' : (range === '30d' ? '30 天' : (range === '1y' ? '1 年' : '全部')) }}
-        趋势
-      </text>
-      <text class="section-subtitle">订单数 &amp; GMV（按天）</text>
-    </view>
-
-    <!-- 时间范围 tabs -->
-    <view class="range-tabs">
-      <view
-        class="range-tab {{range === '7d' ? 'active' : ''}}"
-        data-range="7d"
-        bindtap="onRangeChange"
-      >7天</view>
-
-      <view
-        class="range-tab {{range === '30d' ? 'active' : ''}}"
-        data-range="30d"
-        bindtap="onRangeChange"
-      >30天</view>
-
-      <view
-        class="range-tab {{range === '1y' ? 'active' : ''}}"
-        data-range="1y"
-        bindtap="onRangeChange"
-      >1年</view>
-
-      <view
-        class="range-tab {{range === 'all' ? 'active' : ''}}"
-        data-range="all"
-        bindtap="onRangeChange"
-      >全部</view>
-    </view>
-
-    <view class="card card-stats">
-      <block wx:if="{{dayStats && dayStats.length}}">
-        <view
-          class="day-row"
-          wx:for="{{dayStats}}"
-          wx:key="day"
-        >
-          <view class="day-left">
-            <text class="day-date">{{item.day}}</text>
-          </view>
-          <view class="day-right">
-            <text class="day-orders">订单 {{item.orderCount}}</text>
-            <text class="day-gmv">GMV {{item.gmv}}</text>
-          </view>
-        </view>
+    <text class="section-title">
+      <!-- 这里为了中英文都通顺，直接用不同语言拼接写法 -->
+      <block wx:if="{{lang === 'zh'}}">
+        {{tHome.trend_title_prefix}}
+        {{
+          range === '7d' ? '7 天' :
+          (range === '30d' ? '30 天' :
+           (range === '1y' ? '1 年' : tHome.range_all))
+        }}
+        {{tHome.trend_title_suffix}}
       </block>
-
-      <view wx:if="{{!dayStats || !dayStats.length}}" class="empty-text">
-        当前时间范围内没有订单数据
-      </view>
-    </view>
-  </view>
-
-  <!-- 主播榜单（按 GMV 排序，使用同一时间范围） -->
-  <view wx:if="{{isAdmin}}">
-    <view class="section-header">
-      <text class="section-title">主播榜单</text>
-      <text class="section-subtitle">
-        按 GMV 排序（当前时间范围）
-      </text>
-    </view>
-
-    <view class="card card-stats">
-      <block wx:if="{{anchorStats && anchorStats.length}}">
-        <view
-          class="anchor-row"
-          wx:for="{{anchorStats}}"
-          wx:key="anchorId"
-        >
-          <view class="anchor-left">
-            <text class="anchor-rank">{{index + 1}}</text>
-            <text class="anchor-id">{{item.anchorId}}</text>
-          </view>
-          <view class="anchor-right">
-            <text class="anchor-gmv">GMV {{item.gmv}}</text>
-            <text class="anchor-orders">订单 {{item.orderCount}}</text>
-          </view>
-        </view>
+      <block wx:else>
+        {{
+          (range === '7d' ? tHome.range_7d :
+           (range === '30d' ? tHome.range_30d :
+            (range === '1y' ? tHome.range_1y : tHome.range_all)))
+        }} {{tHome.trend_title_suffix}}
       </block>
+    </text>
+    <text class="section-subtitle">{{tHome.trend_subtitle}}</text>
+  </view>
 
-      <view wx:if="{{!anchorStats || !anchorStats.length}}" class="empty-text">
-        当前时间范围内暂无主播数据
+  <!-- 时间范围 tabs -->
+  <view class="range-tabs">
+    <view
+      class="range-tab {{range === '7d' ? 'active' : ''}}"
+      data-range="7d"
+      bindtap="onRangeChange"
+    >{{tHome.range_7d}}</view>
+
+    <view
+      class="range-tab {{range === '30d' ? 'active' : ''}}"
+      data-range="30d"
+      bindtap="onRangeChange"
+    >{{tHome.range_30d}}</view>
+
+    <view
+      class="range-tab {{range === '1y' ? 'active' : ''}}"
+      data-range="1y"
+      bindtap="onRangeChange"
+    >{{tHome.range_1y}}</view>
+
+    <view
+      class="range-tab {{range === 'all' ? 'active' : ''}}"
+      data-range="all"
+      bindtap="onRangeChange"
+    >{{tHome.range_all}}</view>
+  </view>
+
+  <view class="card card-stats">
+    <block wx:if="{{dayStats && dayStats.length}}">
+      <view
+        class="day-row"
+        wx:for="{{dayStats}}"
+        wx:key="day"
+      >
+        <view class="day-left">
+          <text class="day-date">{{item.day}}</text>
+        </view>
+        <view class="day-right">
+          <text class="day-orders">
+            {{tHome.label_order}} {{item.orderCount}}
+          </text>
+          <text class="day-gmv">
+            {{tHome.label_gmv}} {{item.gmv}}
+          </text>
+        </view>
       </view>
+    </block>
+
+    <view wx:if="{{!dayStats || !dayStats.length}}" class="empty-text">
+      {{tHome.empty_day_stats}}
     </view>
   </view>
+</view>
+
+<!-- 主播榜单（按 GMV 排序，使用同一时间范围）—— 仅管理员可见 -->
+<view wx:if="{{isAdmin}}">
+  <view class="section-header">
+    <text class="section-title">{{tHome.anchor_rank_title}}</text>
+    <text class="section-subtitle">
+      {{tHome.anchor_rank_subtitle}}
+    </text>
+  </view>
+
+  <view class="card card-stats">
+    <block wx:if="{{anchorStats && anchorStats.length}}">
+      <view
+        class="anchor-row"
+        wx:for="{{anchorStats}}"
+        wx:key="anchorId"
+      >
+        <view class="anchor-left">
+          <text class="anchor-rank">{{index + 1}}</text>
+          <text class="anchor-id">{{item.anchorId}}</text>
+        </view>
+        <view class="anchor-right">
+          <text class="anchor-gmv">
+            {{tHome.label_gmv}} {{item.gmv}}
+          </text>
+          <text class="anchor-orders">
+            {{tHome.label_order}} {{item.orderCount}}
+          </text>
+        </view>
+      </view>
+    </block>
+
+    <view wx:if="{{!anchorStats || !anchorStats.length}}" class="empty-text">
+      {{tHome.empty_anchor_stats}}
+    </view>
+  </view>
+</view>
 
 </view>

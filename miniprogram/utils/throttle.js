@@ -15,12 +15,14 @@ const canRun = (key, wait = 1000) => {
 };
 
 const withThrottle = (key, fn, wait = 1000) => {
-  return (...args) => {
+  // ❗ 用普通 function，不要用箭头函数
+  return function (...args) {
     if (!canRun(key, wait)) {
       wx.showToast({ title: '刷新太频繁，请稍等', icon: 'none' });
       return;
     }
-    return fn(...args);
+    // 把当前 this（页面实例）传给 fn
+    return fn.apply(this, args);
   };
 };
 

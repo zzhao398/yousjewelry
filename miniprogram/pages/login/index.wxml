@@ -1,53 +1,70 @@
 <view class="page">
-  <!-- 顶部标题 -->
-  <view class="logo-area">
-    <text class="logo">YOUJEWLRY</text>
+
+<!-- 右上角 language 语言 -->
+<view class="lang-switcher">
+  <view class="lang-btn" bindtap="onLangButtonTap">
+    <text>language 语言</text>
   </view>
 
-  <!-- 登录表单 -->
-  <view class="form">
-    <view class="input-row">
-      <view class="icon">👤</view>
-      <input
-        placeholder="用户名 / 手机号 / 邮箱"
-        value="{{loginAccount}}"
-        data-field="loginAccount"
-        bindinput="onInput"
-      />
+  <view wx:if="{{langMenuVisible}}" class="lang-menu">
+    <view class="lang-item" data-lang="zh" bindtap="onSelectLang">
+      <text>{{tCommon.lang_zh}}</text>
     </view>
-
-    <view class="input-row">
-      <view class="icon">🔒</view>
-      <input
-        placeholder="密码"
-        password="true"
-        value="{{password}}"
-        data-field="password"
-        bindinput="onInput"
-      />
+    <view class="lang-item" data-lang="en" bindtap="onSelectLang">
+      <text>{{tCommon.lang_en}}</text>
     </view>
+  </view>
+</view>
 
-    <button
-      class="btn-login"
-      type="primary"
-      loading="{{loading}}"
-      bindtap="onLoginTap"
-    >
-      登录
-    </button>
+<!-- 顶部标题 -->
+<view class="logo-area">
+  <text class="logo">{{tLogin.logo}}</text>
+</view>
+
+<!-- 登录表单 -->
+<view class="form">
+  <view class="input-row">
+    <view class="icon">👤</view>
+    <input
+      placeholder="{{tLogin.account_placeholder}}"
+      value="{{loginAccount}}"
+      data-field="loginAccount"
+      bindinput="onInput"
+    />
   </view>
 
-  <!-- 注册入口 -->
-  <view class="register-area">
-    <button class="btn-register" bindtap="onRegisterAnchor">
-      注册为主播
-    </button>
-    <button class="btn-register" bindtap="onRegisterAdmin">
-      注册为管理员
-    </button>
+  <view class="input-row">
+    <view class="icon">🔒</view>
+    <input
+      placeholder="{{tLogin.password_placeholder}}"
+      password="true"
+      value="{{password}}"
+      data-field="password"
+      bindinput="onInput"
+    />
   </view>
 
-  <view class="footer">
-    <text>@ YouJewlry 版权所有</text>
-  </view>
+  <button
+    class="btn-login"
+    type="primary"
+    loading="{{loading}}"
+    bindtap="onLoginTap"
+  >
+    {{tLogin.btn_login}}
+  </button>
+</view>
+
+<!-- 注册入口 -->
+<view class="register-area">
+  <button class="btn-register" bindtap="onRegisterAnchor">
+    {{tLogin.btn_register_anchor}}
+  </button>
+  <button class="btn-register" bindtap="onRegisterAdmin">
+    {{tLogin.btn_register_admin}}
+  </button>
+</view>
+
+<view class="footer">
+  <text>{{tLogin.footer_copyright}}</text>
+</view>
 </view>

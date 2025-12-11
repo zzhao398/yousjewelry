@@ -169,24 +169,24 @@ const approveUser = (params) =>
   call('users.approve', params || {});
 
 
-function listAnchors() {
-  const g = ensureGlobalCache();
-  const now = Date.now();
-
-  if (g.anchorListCache && now - g.anchorListCache.cachedAt < TTL_SHORT) {
-    return Promise.resolve(g.anchorListCache.data);
+  function listAnchors() {
+    const g = ensureGlobalCache();
+    const now = Date.now();
+  
+    if (g.anchorListCache && now - g.anchorListCache.cachedAt < TTL_SHORT) {
+      return Promise.resolve(g.anchorListCache.data);
+    }
+  
+    return call('admin.anchors.list').then((res) => {
+      g.anchorListCache = {
+        data: res,
+        cachedAt: Date.now(),
+      };
+      return res;
+    });
   }
 
-  return call('admin.anchors.list').then((res) => {
-    g.anchorListCache = {
-      data: res,
-      cachedAt: Date.now(),
-    };
-    return res;
-  });
-}
-
-// 设置主播绑定商品：这是写操作，不缓存
+// 设置主播绑定商品：写操作，不缓存
 const setAnchorProducts = (anchorId, productIds) =>
   call('admin.anchor.setProducts', { anchorId, productIds });
 

@@ -1,5 +1,11 @@
 <view class="page">
-  <view class="page-title">主播信息管理</view>
+  <!-- 顶部标题 + 一键重建按钮 -->
+  <view class="page-header">
+    <text class="page-title">主播信息管理</text>
+    <button class="btn-rebuild-all" bindtap="onRebuildAll">
+      一键重建订单索引
+    </button>
+  </view>
 
   <view wx:if="{{loading}}" class="tips">加载中...</view>
   <view wx:elif="{{!list.length}}" class="tips">暂无已通过的主播</view>
@@ -31,6 +37,7 @@
         <text class="value">{{item.accountId || '-'}}</text>
       </view>
 
+      <!-- 绑定 PID 可编辑输入框 -->
       <view class="row multi">
         <text class="label">绑定商品ID：</text>
         <input
@@ -38,11 +45,29 @@
           placeholder="多个 productId 用逗号或空格分隔"
           value="{{item.productIdsStr}}"
           data-index="{{index}}"
-          bindblur="onProductIdsBlur"
+          bindinput="onProductIdsInput"
         />
       </view>
       <view class="hint">
         说明：一个主播可以绑定多个商品ID，支持英文逗号、中文逗号或空格分隔。
+      </view>
+
+      <!-- 按钮行：右对齐 -->
+      <view class="btn-row">
+        <button
+          class="btn-save"
+          data-index="{{index}}"
+          bindtap="onSave"
+        >
+          保存绑定
+        </button>
+        <button
+          class="btn-backfill"
+          data-anchor-id="{{item.anchorId}}"
+          bindtap="onBackfill"
+        >
+          回填历史订单
+        </button>
       </view>
     </view>
   </block>

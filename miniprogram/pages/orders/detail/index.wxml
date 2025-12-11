@@ -3,26 +3,26 @@
 <view class="page">
   <!-- 如果还在加载 & 本地没有数据，可以做个简单 loading，占位一下 -->
   <view wx:if="{{loading && !order}}" class="loading">
-    加载中…
+    {{tOrderDetail.loading}}
   </view>
 
   <view wx:if="{{order}}">
     <!-- 顶部：订单号 + 状态 -->
     <view class="card card-header">
       <view class="order-id-row">
-        <text class="label">订单号：</text>
+        <text class="label">{{tOrderDetail.order_id_label}}</text>
         <text class="order-id">{{order.displayOid}}</text>
       </view>
 
       <view class="order-sub-row">
-        <text class="sub-label">下单时间：</text>
+        <text class="sub-label">{{tOrderDetail.created_at_label}}</text>
         <text class="sub-text">
           {{order.createdAtText || '--'}}
         </text>
       </view>
 
       <view wx:if="{{order.paidAtText}}" class="order-sub-row">
-        <text class="sub-label">付款时间：</text>
+        <text class="sub-label">{{tOrderDetail.paid_at_label}}</text>
         <text class="sub-text">{{order.paidAtText}}</text>
       </view>
 
@@ -38,52 +38,52 @@
 
     <!-- 金额信息 -->
     <view class="card">
-      <view class="card-title">金额信息</view>
+      <view class="card-title">{{tOrderDetail.section_amount}}</view>
 
       <view class="amount-row">
-        <text class="amount-label">产品总额：</text>
+        <text class="amount-label">{{tOrderDetail.product_amount_label}}</text>
         <text class="amount-value">
           {{order.currency}} {{order.productAmount.toFixed(2)}}
         </text>
       </view>
 
       <view class="amount-row">
-        <text class="amount-label">运费：</text>
+        <text class="amount-label">{{tOrderDetail.shipping_price_label}}</text>
         <text class="amount-value">
           {{order.currency}} {{order.shippingPrice.toFixed(2)}}
         </text>
       </view>
 
       <view class="amount-row">
-        <text class="amount-label">优惠券：</text>
+        <text class="amount-label">{{tOrderDetail.coupon_price_label}}</text>
         <text class="amount-value">
           -{{order.currency}} {{order.couponPrice.toFixed(2)}}
         </text>
       </view>
 
       <view class="amount-row">
-        <text class="amount-label">折扣：</text>
+        <text class="amount-label">{{tOrderDetail.discount_price_label}}</text>
         <text class="amount-value">
           -{{order.currency}} {{order.discountPrice.toFixed(2)}}
         </text>
       </view>
 
       <view class="amount-row">
-        <text class="amount-label">手续费：</text>
+        <text class="amount-label">{{tOrderDetail.fee_price_label}}</text>
         <text class="amount-value">
           {{order.currency}} {{order.feePrice.toFixed(2)}}
         </text>
       </view>
 
       <view class="amount-row">
-        <text class="amount-label">税费：</text>
+        <text class="amount-label">{{tOrderDetail.tax_price_label}}</text>
         <text class="amount-value">
           {{order.currency}} {{order.taxPrice.toFixed(2)}}
         </text>
       </view>
 
       <view class="amount-total-row">
-        <text class="amount-total-label">总计：</text>
+        <text class="amount-total-label">{{tOrderDetail.total_label}}</text>
         <text class="amount-total-value">
           {{order.displayAmountText}}
         </text>
@@ -92,83 +92,87 @@
 
     <!-- 顾客信息 -->
     <view class="card">
-      <view class="card-title">顾客</view>
+      <view class="card-title">{{tOrderDetail.section_customer}}</view>
 
       <view class="info-row">
-        <text class="info-label">姓名：</text>
+        <text class="info-label">{{tOrderDetail.customer_name_label}}</text>
         <text class="info-value">
-          {{order.customerName || '—'}}
+          {{order.customerName || tOrderDetail.default_dash}}
         </text>
       </view>
 
       <view class="info-row">
-        <text class="info-label">邮箱：</text>
+        <text class="info-label">{{tOrderDetail.customer_email_label}}</text>
         <text class="info-value">
-          {{order.customerEmail || '—'}}
+          {{order.customerEmail || tOrderDetail.default_dash}}
         </text>
       </view>
 
       <view class="info-row">
-        <text class="info-label">国家：</text>
+        <text class="info-label">{{tOrderDetail.customer_country_label}}</text>
         <text class="info-value">
-          {{order.customerCountry || '—'}}
+          {{order.customerCountry || tOrderDetail.default_dash}}
         </text>
       </view>
 
       <view class="info-row">
-        <text class="info-label">IP：</text>
+        <text class="info-label">{{tOrderDetail.customer_ip_label}}</text>
         <text class="info-value">
-          {{order.customerIp || '—'}}
+          {{order.customerIp || tOrderDetail.default_dash}}
         </text>
       </view>
     </view>
 
     <!-- 配送信息 -->
     <view class="card">
-      <view class="card-title">配送信息</view>
+      <view class="card-title">{{tOrderDetail.section_shipping}}</view>
 
       <view class="info-row">
-        <text class="info-label">物流方式：</text>
+        <text class="info-label">{{tOrderDetail.shipping_method_label}}</text>
         <text class="info-value">
-          {{order.shippingMethod || '—'}}
+          {{order.shippingMethod || tOrderDetail.default_dash}}
         </text>
       </view>
 
       <view class="info-row">
-        <text class="info-label">运费：</text>
+        <text class="info-label">{{tOrderDetail.shipping_price_label}}</text>
         <text class="info-value">
           {{order.currency}} {{order.shippingPrice.toFixed(2)}}
         </text>
       </view>
 
       <view class="info-row">
-        <text class="info-label">包裹：</text>
+        <text class="info-label">{{tOrderDetail.package_label}}</text>
         <text class="info-value">
-          重量：{{order.totalWeight}}KG
-          产品数量：{{order.itemCount}}
+          {{tOrderDetail.package_weight_prefix}}{{order.totalWeight}}KG
+          {{tOrderDetail.package_qty_prefix}}{{order.itemCount}}
         </text>
       </view>
 
       <view class="info-row">
-        <text class="info-label">地址：</text>
-        <text class="info-value">{{order.shippingAddress}}</text>
+        <text class="info-label">{{tOrderDetail.address_label}}</text>
+        <text class="info-value">
+          {{order.shippingAddress || tOrderDetail.default_dash}}
+        </text>
       </view>
 
       <view class="info-row">
-        <text class="info-label">运单号：</text>
-        <text class="info-value">{{order.trackingNumber}}</text>
+        <text class="info-label">{{tOrderDetail.tracking_label}}</text>
+        <text class="info-value">
+          {{order.trackingNumber || tOrderDetail.default_dash}}
+        </text>
       </view>
     </view>
 
     <!-- 商品清单 -->
     <view class="card">
-      <view class="card-title">商品清单</view>
+      <view class="card-title">{{tOrderDetail.section_items}}</view>
 
       <view
         wx:if="{{!order.items || !order.items.length}}"
         class="empty-text"
       >
-        暂无商品数据
+        {{tOrderDetail.items_empty}}
       </view>
 
       <block wx:for="{{order.items}}" wx:key="index">
@@ -180,12 +184,15 @@
             mode="aspectFill"
           />
           <view class="item-main">
-            <view class="item-name">{{item.name || '—'}}</view>
-            <view class="item-sku">SKU：{{item.sku || '—'}}</view>
+            <view class="item-name">
+              {{item.name || tOrderDetail.default_dash}}
+            </view>
+            <view class="item-sku">
+              SKU：{{item.sku || tOrderDetail.default_dash}}
+            </view>
             <view class="item-bottom">
               <text class="item-price">
-                {{item.currency}}
-                {{item.price.toFixed(2)}}
+                {{item.currency}} {{item.price.toFixed(2)}}
               </text>
               <text class="item-qty">x {{item.qty}}</text>
             </view>
@@ -196,33 +203,33 @@
 
     <!-- 备注 -->
     <view class="card">
-      <view class="card-title">备注</view>
+      <view class="card-title">{{tOrderDetail.section_notes}}</view>
 
       <view class="note-row">
-        <text class="note-label">顾客备注：</text>
+        <text class="note-label">{{tOrderDetail.note_customer_label}}</text>
         <text class="note-text">
-          {{order.customerNote || '无'}}
+          {{order.customerNote || tOrderDetail.default_none}}
         </text>
       </view>
 
       <view class="note-row">
-        <text class="note-label">后台备注：</text>
+        <text class="note-label">{{tOrderDetail.note_admin_label}}</text>
         <text class="note-text">
-          {{order.adminNote || '无'}}
+          {{order.adminNote || tOrderDetail.default_none}}
         </text>
       </view>
     </view>
   </view>
 
   <view wx:if="{{!loading && !order}}" class="empty-wrapper">
-    <text class="empty-text">暂无订单数据</text>
+    <text class="empty-text">{{tOrderDetail.empty_title}}</text>
     <button
       class="empty-btn"
       bindtap="fetchDetail"
       type="default"
       size="mini"
     >
-      重新加载
+      {{tOrderDetail.empty_btn_reload}}
     </button>
   </view>
 </view>

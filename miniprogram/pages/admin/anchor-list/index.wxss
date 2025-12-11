@@ -1,67 +1,121 @@
 .page {
-  padding: 16rpx 24rpx 40rpx;
-  background-color: #f5f5f5;
-  min-height: 100vh;
-}
-
-.page-title {
-  font-size: 32rpx;
-  font-weight: 600;
-  margin-bottom: 24rpx;
-}
-
-.tips {
-  margin-top: 40rpx;
-  text-align: center;
-  color: #999;
-  font-size: 26rpx;
-}
-
-.card {
-  background-color: #fff;
-  border-radius: 16rpx;
-  padding: 24rpx;
-  margin-bottom: 20rpx;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.04);
-}
-
-.row {
-  display: flex;
-  flex-direction: row;
-  margin-bottom: 8rpx;
-}
-
-.row.multi {
-  align-items: flex-start;
-}
-
-.label {
-  width: 170rpx;
-  color: #888;
-  font-size: 26rpx;
-}
-
-.value {
-  flex: 1;
-  color: #333;
-  font-size: 26rpx;
-}
-
-.value.strong {
-  font-weight: 600;
-}
-
-.input {
-  flex: 1;
-  min-height: 60rpx;
-  padding: 8rpx 12rpx;
-  background-color: #f7f7f7;
-  border-radius: 8rpx;
-  font-size: 26rpx;
-}
-
-.hint {
-  margin-top: 8rpx;
-  font-size: 22rpx;
-  color: #999;
-}
+    padding: 16rpx 24rpx 40rpx;
+    background-color: #f5f5f5;
+    min-height: 100vh;
+  }
+  
+  /* 标题 + 顶部按钮 */
+  .page-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24rpx;
+  }
+  
+  .page-title {
+    font-size: 32rpx;
+    font-weight: 600;
+  }
+  
+  .btn-rebuild-all {
+    background-color: #ffffff;
+    color: #333;
+    padding: 0 24rpx;
+    height: 64rpx;
+    line-height: 64rpx;
+    border-radius: 8rpx;
+    font-size: 26rpx;
+    border: 1px solid #ccc;
+  }
+  
+  .tips {
+    margin-top: 40rpx;
+    text-align: center;
+    color: #999;
+    font-size: 26rpx;
+  }
+  
+  .card {
+    background-color: #fff;
+    border-radius: 16rpx;
+    padding: 24rpx;
+    margin-bottom: 20rpx;
+    box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.04);
+  }
+  
+  .row {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 8rpx;
+  }
+  
+  .row.multi {
+    align-items: flex-start;
+  }
+  
+  .label {
+    width: 170rpx;
+    color: #888;
+    font-size: 26rpx;
+  }
+  
+  .value {
+    flex: 1;
+    color: #333;
+    font-size: 26rpx;
+  }
+  
+  .value.strong {
+    font-weight: 600;
+  }
+  
+  .input {
+    flex: 1;
+    min-height: 60rpx;
+    padding: 8rpx 12rpx;
+    background-color: #f7f7f7;
+    border-radius: 8rpx;
+    font-size: 26rpx;
+  }
+  
+  .hint {
+    margin-top: 8rpx;
+    font-size: 22rpx;
+    color: #999;
+  }
+  
+  /* 底部按钮行：右对齐 */
+  .btn-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 20rpx;
+  }
+  
+  /* 绿色主要按钮 */
+  .btn-save {
+    background-color: #04be02;
+    color: #ffffff;
+    padding: 0 32rpx;
+    height: 72rpx;
+    line-height: 72rpx;
+    border-radius: 8rpx;
+    font-size: 28rpx;
+    border: none;
+    margin-right: 20rpx;
+  }
+  
+  /* 次要按钮，灰色 */
+  .btn-backfill {
+    background-color: #ffffff;
+    color: #333333;
+    padding: 0 32rpx;
+    height: 72rpx;
+    line-height: 72rpx;
+    border-radius: 8rpx;
+    font-size: 28rpx;
+    border: 1px solid #ccc;
+  }
+  

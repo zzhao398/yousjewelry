@@ -2,63 +2,66 @@
 
 <view class="page">
 
-  <!-- 加载中 -->
-  <view wx:if="{{loading}}" class="loading">
-    加载中…
+<!-- 加载中 -->
+<view wx:if="{{loading}}" class="loading">
+  {{tMine.loading}}
+</view>
+
+<!-- 已登录 -->
+<view wx:elif="{{user}}">
+
+  <!-- 头部：名字 + 角色 + 状态 -->
+  <view class="header">
+    <text class="name">{{user.displayName || user.realName}}</text>
+    <text class="role">
+      {{ user.role === 'owner'
+          ? tMine.role_owner
+          : (user.role === 'admin'
+              ? tMine.role_admin
+              : tMine.role_anchor) }}
+    </text>
   </view>
 
-  <!-- 已登录 -->
-  <view wx:elif="{{user}}">
-
-    <!-- 头部：名字 + 角色 + 状态 -->
-    <view class="header">
-      <text class="name">{{user.displayName || user.realName}}</text>
-      <text class="role">
-        {{ user.role === 'owner' ? '超级管理员' :
-           user.role === 'admin' ? '管理员' : '主播' }}
-      </text>
-    </view>
-
-    <view class="sub">
-      <text>账号：{{user.loginAccount}}</text>
-    </view>
-
-    <!-- 状态提示 -->
-    <view class="status" wx:if="{{user.status === 'pending'}}">
-      你的账号正在审核中，暂时无法查看订单数据，请提醒管理员完成认证。
-    </view>
-
-    <view class="status status-ok" wx:if="{{user.status === 'approved'}}">
-      账号已通过审核，可以正常查看订单。
-    </view>
-
-    <view class="status status-error" wx:if="{{user.status === 'rejected'}}">
-      你的注册申请未通过，请联系管理员。
-    </view>
-
-    <!-- 管理员专属入口 -->
-    <view wx:if="{{user.role === 'owner' || user.role === 'admin'}}" class="section">
-      <view class="section-title">管理功能</view>
-
-      <view class="cell" bindtap="onGoAnchorApproval">
-        <text>主播认证审核</text>
-        <!-- 以后可以在这里加一个红点：比如有待审核数量时 -->
-      </view>
-
-      <view class="cell" bindtap="onGoAnchorList">
-        <text>主播信息管理</text>
-      </view>
-    </view>
-
-    <!-- 通用设置区域 -->
-    <view class="section">
-      <view class="section-title">账号</view>
-
-      <view class="cell" bindtap="onLogout">
-        <text>退出登录</text>
-      </view>
-    </view>
-
+  <view class="sub">
+    <text>{{tMine.label_account}}{{user.loginAccount}}</text>
   </view>
+
+  <!-- 状态提示 -->
+  <view class="status" wx:if="{{user.status === 'pending'}}">
+    {{tMine.status_pending}}
+  </view>
+
+  <view class="status status-ok" wx:if="{{user.status === 'approved'}}">
+    {{tMine.status_approved}}
+  </view>
+
+  <view class="status status-error" wx:if="{{user.status === 'rejected'}}">
+    {{tMine.status_rejected}}
+  </view>
+
+  <!-- 管理员专属入口 -->
+  <view wx:if="{{user.role === 'owner' || user.role === 'admin'}}" class="section">
+    <view class="section-title">{{tMine.section_admin}}</view>
+
+    <view class="cell" bindtap="onGoAnchorApproval">
+      <text>{{tMine.admin_anchor_approve}}</text>
+      <!-- 以后可以在这里加一个红点：比如有待审核数量时 -->
+    </view>
+
+    <view class="cell" bindtap="onGoAnchorList">
+      <text>{{tMine.admin_anchor_list}}</text>
+    </view>
+  </view>
+
+  <!-- 通用设置区域 -->
+  <view class="section">
+    <view class="section-title">{{tMine.section_account}}</view>
+
+    <view class="cell" bindtap="onLogout">
+      <text>{{tMine.logout}}</text>
+    </view>
+  </view>
+
+</view>
 
 </view>

@@ -3,9 +3,11 @@
 // 订单详情页：
 // - 从 ueeApi 拿 orders.detail（直接读 orders_slim / 或你以后扩展的字段）
 // - 在这里把金额 / 标签 / 文本都格式化好，WXML 只负责展示
+// - 多语言：文案来自 i18n.orderDetail / i18n.orderCommon
 
 const { getOrderDetail } = require('../../../utils/ueeApi');
 const { log } = require('../../../utils/logger');
+const i18n = require('../../../utils/i18n');
 
 function formatTime(sec) {
   if (!sec) return '';
@@ -25,19 +27,42 @@ Page({
     oid: '',
     loading: false,
     order: null,
+
+    // 多语言
+    lang: i18n.getCurrentLang(),
+    tOrderDetail: i18n.getDict().orderDetail,
+    tOrderCommon: i18n.getDict().orderCommon,
+  },
+
+  // 刷新当前页面的文案
+  refreshI18n() {
+    const dict = i18n.getDict();
+    this.setData({
+      lang: i18n.getCurrentLang(),
+      tOrderDetail: dict.orderDetail,
+      tOrderCommon: dict.orderCommon,
+    });
   },
 
   onLoad(options) {
     console.log('[order detail onLoad] options =', options);
     const oid = options.oid || '';
     this.setData({ oid });
+    this.refreshI18n();
 
     if (!oid) {
-      wx.showToast({ title: '缺少订单号', icon: 'none' });
+      wx.showToast({
+        title: this.data.tOrderDetail.toast_not_found,
+        icon: 'none',
+      });
       return;
     }
 
     this.fetchDetail();
+  },
+
+  onShow() {
+    this.refreshI18n();
   },
 
   // 拉取订单详情
@@ -49,11 +74,18 @@ Page({
 
     log('orders.detail.fetch', { oid });
 
-    // ✅ 关键：只传字符串
     getOrderDetail(oid)
       .then((res) => {
+        const tDetail =
+          this.data.tOrderDetail || i18n.getDict().orderDetail;
+        const tCommon =
+          this.data.tOrderCommon || i18n.getDict().orderCommon;
+
         if (!res) {
-          wx.showToast({ title: '未找到该订单', icon: 'none' });
+          wx.showToast({
+            title: tDetail.toast_not_found,
+            icon: 'none',
+          });
           this.setData({ order: null });
           return;
         }
@@ -61,7 +93,8 @@ Page({
         // 后端返回的原始订单对象（来自 orders_slim + 你以后扩展的字段）
         const o = res;
 
-        const currency = o.currency || o.Currency || o.PayCurrency || 'USD';
+        const currency =
+          o.currency || o.Currency || o.PayCurrency || 'USD';
 
         // ------- 金额相关（尽量兼容 Ueeshop 字段） -------
         const productAmount = Number(
@@ -88,25 +121,25 @@ Page({
         );
 
         // ------- 状态标签 -------
-        let payStatusLabel = '未付款';
+        let payStatusLabel = tCommon.pay_unpaid;
         let payTagClass = 'tag-red';
         const payStatus = o.paymentStatus || o.PaymentStatus;
         if (payStatus === 'paid') {
-          payStatusLabel = '已付款';
+          payStatusLabel = tCommon.pay_paid;
           payTagClass = 'tag-green';
         } else if (payStatus === 'partially_paid') {
-          payStatusLabel = '部分付款';
+          payStatusLabel = tCommon.pay_partial;
           payTagClass = 'tag-yellow';
         }
 
-        let shipStatusLabel = '未发货';
+        let shipStatusLabel = tCommon.ship_unshipped;
         let shipTagClass = 'tag-red';
         const shipStatus = o.shippingStatus || o.ShippingStatus;
         if (shipStatus === 'shipped') {
-          shipStatusLabel = '已发货';
+          shipStatusLabel = tCommon.ship_shipped;
           shipTagClass = 'tag-green';
         } else if (shipStatus === 'partial') {
-          shipStatusLabel = '部分发货';
+          shipStatusLabel = tCommon.ship_partial;
           shipTagClass = 'tag-yellow';
         }
 
@@ -135,7 +168,7 @@ Page({
         const itemCount =
           Number(o.itemCount || o.totalQty || 0) || 0;
 
-        const shippingAddress =
+        const shippingAddressRaw =
           o.shippingAddress ||
           [
             o.ShippingAddressLine1,
@@ -146,11 +179,12 @@ Page({
             o.ShippingCountry,
           ]
             .filter(Boolean)
-            .join(' ') ||
-          '—';
+            .join(' ');
+
+        const shippingAddress = shippingAddressRaw || '';
 
         const trackingNumber =
-          o.trackingNumber || o.TrackingNumber || '—';
+          o.trackingNumber || o.TrackingNumber || '';
 
         // ------- 商品清单 -------
         const rawItems =
@@ -214,9 +248,9 @@ Page({
           totalWeight,
           itemCount,
 
-          // 备注
-          customerNote: customerNote || '无',
-          adminNote: adminNote || '无',
+          // 备注（这里先保持原始文本，默认值在 WXML 里用 i18n 处理）
+          customerNote,
+          adminNote,
 
           // 商品
           items,
@@ -226,7 +260,12 @@ Page({
       })
       .catch((err) => {
         console.error('getOrderDetail error', err);
-        wx.showToast({ title: '加载订单详情失败', icon: 'none' });
+        const tDetail =
+          this.data.tOrderDetail || i18n.getDict().orderDetail;
+        wx.showToast({
+          title: tDetail.toast_load_failed,
+          icon: 'none',
+        });
       })
       .finally(() => {
         this.setData({ loading: false });

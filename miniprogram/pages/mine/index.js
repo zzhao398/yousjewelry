@@ -1,14 +1,29 @@
 // miniprogram/pages/mine/index.js
 
-const { call } = require('../../utils/request');
 const { getMe } = require('../../utils/ueeApi');
+const i18n = require('../../utils/i18n');
+
 Page({
   data: {
     loading: true,
-    user: null,   // 后端返回的用户信息
+    user: null, // 后端返回的用户信息
+
+    // 多语言
+    lang: i18n.getCurrentLang(),
+    tMine: i18n.getDict().mine,
+  },
+
+  // 刷新当前页面文案
+  refreshI18n() {
+    const dict = i18n.getDict();
+    this.setData({
+      lang: i18n.getCurrentLang(),
+      tMine: dict.mine,
+    });
   },
 
   onShow() {
+    this.refreshI18n();
     this.fetchMe();
   },
 
@@ -28,7 +43,10 @@ Page({
       })
       .catch((err) => {
         console.error('getMe error', err);
-        wx.showToast({ title: '加载失败', icon: 'none' });
+        wx.showToast({
+          title: this.data.tMine.toast_load_failed,
+          icon: 'none',
+        });
       })
       .finally(() => {
         this.setData({ loading: false });
@@ -37,9 +55,11 @@ Page({
 
   // 退出登录：本地清理 + 返回登录页
   onLogout() {
+    const t = this.data.tMine;
+
     wx.showModal({
-      title: '退出登录',
-      content: '确定要退出当前账号吗？',
+      title: t.logout_title,
+      content: t.logout_content,
       success: (res) => {
         if (!res.confirm) return;
 
