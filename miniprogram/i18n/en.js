@@ -205,6 +205,25 @@ module.exports = {
     logout_content: 'Are you sure you want to log out?',
 
     toast_load_failed: 'Failed to load data',
+    admin_product_pid: 'Product PID Lookup',
   },
+
+  productPid: {
+  title: 'Product PID Lookup',
+  sub: 'Click to fetch products from Ueeshop, cache to DB, and return the list.',
+  btn_sync: 'Query',
+  loading: 'Loading...',
+  search_placeholder: 'Filter by product name or PID (local)',
+  col_name: 'Product Name',
+  col_pid: 'PID',
+  empty: 'No data yet. Click the button above to query.',
+  no_match: 'No matched results',
+  toast_ok: 'Updated. Total {{n}}',
+  toast_failed: 'Query failed',
+  total_prefix: '共 ',
+    total_suffix: ' 条',
+},
+
+
   };
   

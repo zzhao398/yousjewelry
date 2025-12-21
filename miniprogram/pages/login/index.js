@@ -5,7 +5,7 @@
 //  - 下面两个按钮：注册为主播 / 注册为管理员
 //  - 如果当前微信 openid 已绑定用户且已登录，则自动跳首页
 
-const { login, getMe } = require('../../utils/ueeApi');
+const { login, getMe } = require('../../utils/busiApi');
 const i18n = require('../../utils/i18n');
 const app = getApp();
 

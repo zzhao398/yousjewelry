@@ -6,7 +6,7 @@
 // - 主播：看到自己的趋势曲线，但看不到排行榜
 // - 支持下拉刷新（带节流）
 
-const { getMe, getDashboardSummary } = require('../../utils/ueeApi');
+const { getMe, getDashboardSummary } = require('../../utils/busiApi');
 const { call } = require('../../utils/request');
 const { withThrottle } = require('../../utils/throttle');
 const { log } = require('../../utils/logger');

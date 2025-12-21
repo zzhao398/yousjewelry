@@ -206,6 +206,27 @@ module.exports = {
     logout_content: '确定要退出当前账号吗？',
 
     toast_load_failed: '加载失败',
+    admin_product_pid: '产品 PID 查询',
   },
+
+  // 在 module.exports = { ... } 里加：
+productPid: {
+  title: '产品 PID 查询',
+  sub: '点击按钮后从 Ueeshop 拉取产品列表，写入云数据库并返回结果。',
+  btn_sync: '点击查询',
+  loading: '查询中...',
+  search_placeholder: '输入产品名或 PID 过滤（本地）',
+  col_name: '产品名称',
+  col_pid: 'PID',
+  empty: '暂无数据，点击上方按钮开始查询',
+  no_match: '没有匹配结果',
+  toast_ok: '已更新，共 {{n}} 条',
+  toast_failed: '查询失败',
+  total_prefix: '共 ',
+total_suffix: ' 条',
+
+},
+
+
   };
   

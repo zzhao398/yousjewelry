@@ -1,4 +1,4 @@
-// cloudfunctions/ueeshopApi/utils/sign.js
+// cloudfunctions/orderSync/utils/sign.js
 //
 // 负责生成 Ueeshop API 所需的 sign：
 // - str_code($data, 'trim')：对所有字符串做 trim，数组/对象递归处理

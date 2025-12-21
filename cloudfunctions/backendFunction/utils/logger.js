@@ -1,4 +1,4 @@
-// cloudfunctions/ueeshopApi/utils/logger.js
+// cloudfunctions/backendFunction/utils/logger.js
 
 let dbInstance = null;
 

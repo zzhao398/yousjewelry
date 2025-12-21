@@ -9,7 +9,7 @@
 const call = (action, data = {}) => {
   return wx.cloud
     .callFunction({
-      name: 'ueeshopApi',
+      name: 'backendFunction',
       data: { action, ...data },
     })
     .then((res) => {
@@ -45,4 +45,14 @@ const callSkuAdmin = (action, data = {}) => {
     });
 };
 
-module.exports = { call, callSkuAdmin };
+function callByName(functionName, data) {
+    return wx.cloud
+      .callFunction({
+        name: functionName,
+        data,
+      })
+      .then((res) => res.result);
+  }
+  
+
+module.exports = { call, callSkuAdmin, callByName };

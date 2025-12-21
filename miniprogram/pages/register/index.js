@@ -5,7 +5,7 @@
 //  - 填写登录账号 + 密码 + 基本信息
 //  - 提交后进入 pending，弹出提示联系管理员
 
-const { registerUser } = require('../../utils/ueeApi');
+const { registerUser } = require('../../utils/busiApi');
 
 Page({
   data: {

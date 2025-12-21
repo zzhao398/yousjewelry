@@ -7,7 +7,7 @@
 // - 主播看不到邮箱，只能搜到自己的订单
 // - 金额格式化成 "USD 230.00"
 
-const { getOrders } = require('../../../utils/ueeApi');
+const { getOrders } = require('../../../utils/busiApi');
 const { withThrottle } = require('../../../utils/throttle');
 const { log } = require('../../../utils/logger');
 const i18n = require('../../../utils/i18n');

@@ -1,6 +1,6 @@
 // miniprogram/pages/mine/index.js
 
-const { getMe } = require('../../utils/ueeApi');
+const { getMe } = require('../../utils/busiApi');
 const i18n = require('../../utils/i18n');
 
 Page({
@@ -53,6 +53,9 @@ Page({
       });
   },
 
+ 
+
+
   // 退出登录：本地清理 + 返回登录页
   onLogout() {
     const t = this.data.tMine;
@@ -89,5 +92,10 @@ Page({
     wx.navigateTo({
       url: '/pages/admin/anchor-list/index',
     });
+  },
+  // 管理员点击进入“商品PID”
+   onGoPidQuery() {
+    wx.navigateTo({ 
+      url: '/pages/admin/product-pid/index' });
   },
 });

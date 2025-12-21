@@ -1,4 +1,4 @@
-// miniprogram/utils/ueeApi.js
+// miniprogram/utils/busiApi.js
 //
 // 统一封装所有“业务 API”，在这里做：
 //   - wx.cloud.callFunction 封装（通过 request.js 里的 call）

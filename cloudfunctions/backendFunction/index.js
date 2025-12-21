@@ -1,4 +1,4 @@
-// cloudfunctions/ueeshopApi/index.js
+// cloudfunctions/backendFunction/index.js
 //
 // 职责：
 //   - 作为小程序前端的统一 API 入口：前端只调用这个云函数
@@ -600,7 +600,8 @@ const handleDashboardSummary = async (event) => {
     new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime() / 1000,
   );
 
-  const where = { orderCreatedAt: _.gte(startOfDay) };
+  const where = { orderCreatedAt: _.gte(startOfDay),
+    paymentStatus: 'paid',};
 
   if (role === 'anchor') {
     where.anchorIdList = _.elemMatch(_.eq(anchorId));
@@ -647,6 +648,8 @@ const handleDashboardMetrics = async (event) => {
   if (dateRange.startSec && dateRange.endSec) {
     where.orderCreatedAt = _.gte(dateRange.startSec).and(_.lte(dateRange.endSec));
   }
+
+  where.paymentStatus = 'paid';
 
   if (role === 'anchor') {
     where.anchorIdList = _.elemMatch(_.eq(anchorId));

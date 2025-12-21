@@ -5,7 +5,7 @@
 // - 在这里把金额 / 标签 / 文本都格式化好，WXML 只负责展示
 // - 多语言：文案来自 i18n.orderDetail / i18n.orderCommon
 
-const { getOrderDetail } = require('../../../utils/ueeApi');
+const { getOrderDetail } = require('../../../utils/busiApi');
 const { log } = require('../../../utils/logger');
 const i18n = require('../../../utils/i18n');
 

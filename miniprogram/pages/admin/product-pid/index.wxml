@@ -1,0 +1,54 @@
+<!-- miniprogram/pages/admin/product-pid/index.wxml -->
+
+<view class="page">
+
+  <view class="header">
+    <text class="title">{{tProductPid.title}}</text>
+
+    <button
+      class="btn"
+      loading="{{syncing}}"
+      disabled="{{syncing}}"
+      bindtap="onSyncTap"
+    >
+      {{tProductPid.btn_sync}}
+    </button>
+  </view>
+
+  <text class="sub">{{tProductPid.sub}}</text>
+
+  <!-- 本地过滤 -->
+  <view class="search">
+    <input
+      class="search-input"
+      placeholder="{{tProductPid.search_placeholder}}"
+      value="{{keyword}}"
+      bindinput="onKeywordInput"
+      confirm-type="search"
+      bindconfirm="onKeywordConfirm"
+    />
+    <view class="clear" wx:if="{{keyword}}" bindtap="onClearTap">×</view>
+  </view>
+
+  <!-- 表头 -->
+  <view class="table" wx:if="{{displayList && displayList.length}}">
+    <view class="tr th">
+      <text class="td name">{{tProductPid.col_name}}</text>
+      <text class="td pid">{{tProductPid.col_pid}}</text>
+    </view>
+
+    <!-- 行 -->
+    <view class="tr" wx:for="{{displayList}}" wx:key="pid">
+      <text class="td name">{{item.name}}</text>
+      <text class="td pid">{{item.pid}}</text>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty" wx:if="{{!displayList || !displayList.length}}">
+    <text wx:if="{{!list || !list.length}}">{{tProductPid.empty}}</text>
+    <text wx:else>{{tProductPid.no_match}}</text>
+  </view>
+
+</view>
+

@@ -6,7 +6,7 @@
 //  - 单个主播：回填历史订单（把当前绑定 PID 对应的订单打上该主播）
 //  - 顶部按钮：一键按映射表重建所有订单的 anchorIdList
 
-const { listAnchors, setAnchorProducts } = require('../../../utils/ueeApi');
+const { listAnchors, setAnchorProducts } = require('../../../utils/busiApi');
 const { call } = require('../../../utils/request');
 
 Page({

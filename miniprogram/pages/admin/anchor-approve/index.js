@@ -1,5 +1,5 @@
 // pages/admin/anchor-approve/index.js
-const { listPendingUsers, approveUser } = require('../../../utils/ueeApi');
+const { listPendingUsers, approveUser } = require('../../../utils/busiApi');
 
 Page({
   data: {

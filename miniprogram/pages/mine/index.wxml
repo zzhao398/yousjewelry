@@ -2,66 +2,73 @@
 
 <view class="page">
 
-<!-- 加载中 -->
-<view wx:if="{{loading}}" class="loading">
-  {{tMine.loading}}
-</view>
-
-<!-- 已登录 -->
-<view wx:elif="{{user}}">
-
-  <!-- 头部：名字 + 角色 + 状态 -->
-  <view class="header">
-    <text class="name">{{user.displayName || user.realName}}</text>
-    <text class="role">
-      {{ user.role === 'owner'
-          ? tMine.role_owner
-          : (user.role === 'admin'
-              ? tMine.role_admin
-              : tMine.role_anchor) }}
-    </text>
+  <!-- 加载中 -->
+  <view wx:if="{{loading}}" class="loading">
+    {{tMine.loading}}
   </view>
 
-  <view class="sub">
-    <text>{{tMine.label_account}}{{user.loginAccount}}</text>
-  </view>
+  <!-- 已登录 -->
+  <view wx:elif="{{user}}">
 
-  <!-- 状态提示 -->
-  <view class="status" wx:if="{{user.status === 'pending'}}">
-    {{tMine.status_pending}}
-  </view>
-
-  <view class="status status-ok" wx:if="{{user.status === 'approved'}}">
-    {{tMine.status_approved}}
-  </view>
-
-  <view class="status status-error" wx:if="{{user.status === 'rejected'}}">
-    {{tMine.status_rejected}}
-  </view>
-
-  <!-- 管理员专属入口 -->
-  <view wx:if="{{user.role === 'owner' || user.role === 'admin'}}" class="section">
-    <view class="section-title">{{tMine.section_admin}}</view>
-
-    <view class="cell" bindtap="onGoAnchorApproval">
-      <text>{{tMine.admin_anchor_approve}}</text>
-      <!-- 以后可以在这里加一个红点：比如有待审核数量时 -->
+    <!-- 头部：名字 + 角色 -->
+    <view class="header">
+      <text class="name">{{user.displayName || user.realName}}</text>
+      <text class="role">
+        {{ user.role === 'owner'
+            ? tMine.role_owner
+            : (user.role === 'admin'
+                ? tMine.role_admin
+                : tMine.role_anchor) }}
+      </text>
     </view>
 
-    <view class="cell" bindtap="onGoAnchorList">
-      <text>{{tMine.admin_anchor_list}}</text>
+    <view class="sub">
+      <text>{{tMine.label_account}}{{user.loginAccount}}</text>
     </view>
-  </view>
 
-  <!-- 通用设置区域 -->
-  <view class="section">
-    <view class="section-title">{{tMine.section_account}}</view>
-
-    <view class="cell" bindtap="onLogout">
-      <text>{{tMine.logout}}</text>
+    <!-- 状态提示 -->
+    <view class="status" wx:if="{{user.status === 'pending'}}">
+      {{tMine.status_pending}}
     </view>
-  </view>
 
-</view>
+    <view class="status status-ok" wx:if="{{user.status === 'approved'}}">
+      {{tMine.status_approved}}
+    </view>
+
+    <view class="status status-error" wx:if="{{user.status === 'rejected'}}">
+      {{tMine.status_rejected}}
+    </view>
+
+    <!-- 管理员专属入口 -->
+    <view wx:if="{{user.role === 'owner' || user.role === 'admin'}}" class="section">
+      <view class="section-title">{{tMine.section_admin}}</view>
+
+      <view class="cell" bindtap="onGoAnchorApproval">
+        <text class="cell-text">{{tMine.admin_anchor_approve}}</text>
+        <text class="arrow">›</text>
+      </view>
+
+      <view class="cell" bindtap="onGoAnchorList">
+        <text class="cell-text">{{tMine.admin_anchor_list}}</text>
+        <text class="arrow">›</text>
+      </view>
+
+      <view class="cell" bindtap="onGoPidQuery">
+        <text class="cell-text">{{tMine.admin_product_pid}}</text>
+        <text class="arrow">›</text>
+      </view>
+    </view>
+
+    <!-- 通用设置区域 -->
+    <view class="section">
+      <view class="section-title">{{tMine.section_account}}</view>
+
+      <view class="cell" bindtap="onLogout">
+        <text class="cell-text">{{tMine.logout}}</text>
+        <text class="arrow">›</text>
+      </view>
+    </view>
+
+  </view>
 
 </view>
