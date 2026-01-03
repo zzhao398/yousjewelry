@@ -24,7 +24,16 @@
 - 订单列表：`docs/images/03-orders.png.png`
 - 登录页：`docs/images/04-login.png`
 
-<table>\n\ \ <tr>\n\ \ \ \ <td><img\ src="docs/images/01-home\.png"\ width="240"\ alt="首页概况"\ /></td>\n\ \ \ \ <td><img\ src="docs/images/02-mine\.png\.png"\ width="240"\ alt="我的/管理入口"\ /></td>\n\ \ </tr>\n\ \ <tr>\n\ \ \ \ <td><img\ src="docs/images/03-orders\.png\.png"\ width="240"\ alt="订单列表"\ /></td>\n\ \ \ \ <td><img\ src="docs/images/04-login\.png"\ width="240"\ alt="登录页"\ /></td>\n\ \ </tr>\n</table>
+<table>
+  <tr>
+    <td><img src="docs/images/01-home.png" width="240" alt="首页概况" /></td>
+    <td><img src="docs/images/02-mine.png.png" width="240" alt="我的/管理入口" /></td>
+  </tr>
+  <tr>
+    <td><img src="docs/images/03-orders.png.png" width="240" alt="订单列表" /></td>
+    <td><img src="docs/images/04-login.png" width="240" alt="登录页" /></td>
+  </tr>
+</table>
 
 ## 技术栈
 - 微信小程序原生开发
