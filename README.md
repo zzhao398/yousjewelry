@@ -24,10 +24,7 @@
 - 订单列表：`docs/images/03-orders.png.png`
 - 登录页：`docs/images/04-login.png`
 
-![首页概况](docs/images/01-home.png)
-![我的/管理入口](docs/images/02-mine.png.png)
-![订单列表](docs/images/03-orders.png.png)
-![登录页](docs/images/04-login.png)
+<table>\n\ \ <tr>\n\ \ \ \ <td><img\ src="docs/images/01-home\.png"\ width="240"\ alt="首页概况"\ /></td>\n\ \ \ \ <td><img\ src="docs/images/02-mine\.png\.png"\ width="240"\ alt="我的/管理入口"\ /></td>\n\ \ </tr>\n\ \ <tr>\n\ \ \ \ <td><img\ src="docs/images/03-orders\.png\.png"\ width="240"\ alt="订单列表"\ /></td>\n\ \ \ \ <td><img\ src="docs/images/04-login\.png"\ width="240"\ alt="登录页"\ /></td>\n\ \ </tr>\n</table>
 
 ## 技术栈
 - 微信小程序原生开发
@@ -87,4 +84,5 @@ module.exports = {
 
 ## 参考
 - 微信云开发文档：https://developers.weixin.qq.com/miniprogram/dev/wxcloud/basis/getting-started.html
+
 
